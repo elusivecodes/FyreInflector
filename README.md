@@ -34,7 +34,7 @@ Inflect a word based on a count.
 - `$count` is a number representing the count.
 
 ```php
-$inflected = Iterator::inflect($word, $count);
+$inflected = Inflector::inflect($word, $count);
 ```
 
 **Pluralize**
@@ -44,7 +44,7 @@ Get the plural form of a word.
 - `$word` is a string representing word.
 
 ```php
-$plural = Iterator::pluralize($word);
+$plural = Inflector::pluralize($word);
 ```
 
 **Singularize**
@@ -54,5 +54,5 @@ Get the singular form of a word.
 - `$word` is a string representing word.
 
 ```php
-$singular = Iterator::singularize($word);
+$singular = Inflector::singularize($word);
 ```
