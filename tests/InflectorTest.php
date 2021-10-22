@@ -10,11 +10,27 @@ use
 final class InflectorTest extends TestCase
 {
 
-    public function testPluralize(): void
+    public function testInflectSingular(): void
+    {
+        $this->assertEquals(
+            'hat',
+            Inflector::inflect('hat', 1)
+        );
+    }
+
+    public function testInflectPlural(): void
     {
         $this->assertEquals(
             'hats',
-            Inflector::pluralize('hat')
+            Inflector::inflect('hat', 2)
+        );
+    }
+
+    public function testPluralize(): void
+    {
+        $this->assertEquals(
+            'countries',
+            Inflector::pluralize('country')
         );
     }
 
@@ -37,8 +53,8 @@ final class InflectorTest extends TestCase
     public function testSingularize(): void
     {
         $this->assertEquals(
-            'hat',
-            Inflector::singularize('hats')
+            'country',
+            Inflector::singularize('countries')
         );
     }
 
