@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Fyre;
 
@@ -245,7 +246,7 @@ abstract class Inflector
      */
     protected static function isUncountable(string $word): bool
     {
-        return preg_match('/^('.implode('|', static::$uncountable).')$/i', $word);
+        return preg_match('/^('.implode('|', static::$uncountable).')$/i', $word) !== 0;
     }
 
 }
