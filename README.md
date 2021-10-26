@@ -30,7 +30,7 @@ use Fyre\Utility\Inflector;
 
 Inflect a word based on a count.
 
-- `$word` is a string representing word.
+- `$word` is a string representing the word.
 - `$count` is a number representing the count.
 
 ```php
@@ -41,7 +41,7 @@ $inflected = Inflector::inflect($word, $count);
 
 Get the plural form of a word.
 
-- `$word` is a string representing word.
+- `$word` is a string representing the word.
 
 ```php
 $plural = Inflector::pluralize($word);
@@ -51,7 +51,7 @@ $plural = Inflector::pluralize($word);
 
 Get the singular form of a word.
 
-- `$word` is a string representing word.
+- `$word` is a string representing the word.
 
 ```php
 $singular = Inflector::singularize($word);
