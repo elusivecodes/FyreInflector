@@ -20,7 +20,7 @@ composer install fyre/inflector
 In PHP:
 
 ```php
-use Fyre\Inflector;
+use Fyre\Utility\Inflector;
 ```
 
 

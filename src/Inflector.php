@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fyre;
+namespace Fyre\Utility;
 
 use function
     array_key_exists,

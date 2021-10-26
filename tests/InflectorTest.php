@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use
-    Fyre\Inflector,
+    Fyre\Utility\Inflector,
     PHPUnit\Framework\TestCase;
 
 final class InflectorTest extends TestCase
