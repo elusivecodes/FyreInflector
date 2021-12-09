@@ -14,7 +14,7 @@
 **Using Composer**
 
 ```
-composer install fyre/inflector
+composer require fyre/inflector
 ```
 
 In PHP:
