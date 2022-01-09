@@ -12,7 +12,7 @@ final class InflectorTest extends TestCase
 
     public function testInflectSingular(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'hat',
             Inflector::inflect('hat', 1)
         );
@@ -20,7 +20,7 @@ final class InflectorTest extends TestCase
 
     public function testInflectPlural(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'hats',
             Inflector::inflect('hat', 2)
         );
@@ -28,7 +28,7 @@ final class InflectorTest extends TestCase
 
     public function testPluralize(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'countries',
             Inflector::pluralize('country')
         );
@@ -36,7 +36,7 @@ final class InflectorTest extends TestCase
 
     public function testPluralizeIrregular(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'people',
             Inflector::pluralize('person')
         );
@@ -44,7 +44,7 @@ final class InflectorTest extends TestCase
 
     public function testPluralizeUncountable(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'sheep',
             Inflector::pluralize('sheep')
         );
@@ -52,7 +52,7 @@ final class InflectorTest extends TestCase
 
     public function testSingularize(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'country',
             Inflector::singularize('countries')
         );
@@ -60,7 +60,7 @@ final class InflectorTest extends TestCase
 
     public function testSingularizeIrregular(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'person',
             Inflector::singularize('people')
         );
@@ -68,7 +68,7 @@ final class InflectorTest extends TestCase
 
     public function testSingularizeUncountable(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'sheep',
             Inflector::singularize('sheep')
         );
