@@ -6,9 +6,12 @@ namespace Fyre\Utility;
 use function
     array_key_exists,
     array_search,
+    ctype_upper,
     implode,
     preg_match,
-    preg_replace;
+    preg_replace,
+    strtolower,
+    ucfirst;
 
 /**
  * Inflector
@@ -194,7 +197,13 @@ abstract class Inflector
         $patterns = array_keys(static::$irregular);
         if (preg_match('/('.implode('|', $patterns).')$/i', $word, $match)) {
             $key = $match[1];
-            return  static::$cache['plural'][$word] = preg_replace('/'.$key.'$/i', static::$irregular[$key], $word);
+            $value = static::$irregular[strtolower($key)];
+
+            if (ctype_upper($key[0])) {
+                $value = ucfirst($value);
+            }
+
+            return static::$cache['plural'][$word] = preg_replace('/'.$key.'$/i', $value, $word);
         }
 
         foreach (static::$plural AS $pattern => $replace) {
@@ -224,7 +233,13 @@ abstract class Inflector
         }
 
         if (preg_match('/('.implode('|', static::$irregular).')$/i', $word, $match)) {
-            $key = array_search($match[1], static::$irregular);
+            $value = $match[1];
+            $key = array_search(strtolower($value), static::$irregular);
+
+            if (ctype_upper($value[0])) {
+                $key = ucfirst($key);
+            }
+
             return static::$cache['singular'][$word] = preg_replace('/'.$match[1].'$/i', $key, $word);
         }
 

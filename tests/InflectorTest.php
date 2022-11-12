@@ -34,11 +34,27 @@ final class InflectorTest extends TestCase
         );
     }
 
+    public function testPluralizeTitle(): void
+    {
+        $this->assertSame(
+            'Countries',
+            Inflector::pluralize('Country')
+        );
+    }
+
     public function testPluralizeIrregular(): void
     {
         $this->assertSame(
             'people',
             Inflector::pluralize('person')
+        );
+    }
+
+    public function testPluralizeIrregularTitle(): void
+    {
+        $this->assertSame(
+            'People',
+            Inflector::pluralize('Person')
         );
     }
 
@@ -50,11 +66,27 @@ final class InflectorTest extends TestCase
         );
     }
 
+    public function testPluralizeUncountableTitle(): void
+    {
+        $this->assertSame(
+            'Sheep',
+            Inflector::pluralize('Sheep')
+        );
+    }
+
     public function testSingularize(): void
     {
         $this->assertSame(
             'country',
             Inflector::singularize('countries')
+        );
+    }
+
+    public function testSingularizeTitle(): void
+    {
+        $this->assertSame(
+            'Country',
+            Inflector::singularize('Countries')
         );
     }
 
@@ -66,11 +98,27 @@ final class InflectorTest extends TestCase
         );
     }
 
+    public function testSingularizeIrregularTitle(): void
+    {
+        $this->assertSame(
+            'Person',
+            Inflector::singularize('People')
+        );
+    }
+
     public function testSingularizeUncountable(): void
     {
         $this->assertSame(
             'sheep',
             Inflector::singularize('sheep')
+        );
+    }
+
+    public function testSingularizeUncountableTitle(): void
+    {
+        $this->assertSame(
+            'Sheep',
+            Inflector::singularize('Sheep')
         );
     }
 
