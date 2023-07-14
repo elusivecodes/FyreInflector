@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Fyre\Utility;
 
-use function
-    array_key_exists,
-    array_search,
-    ctype_upper,
-    implode,
-    preg_match,
-    preg_replace,
-    strtolower,
-    ucfirst;
+use function array_key_exists;
+use function array_search;
+use function ctype_upper;
+use function implode;
+use function preg_match;
+use function preg_replace;
+use function strtolower;
+use function ucfirst;
 
 /**
  * Inflector
@@ -174,9 +173,7 @@ abstract class Inflector
      */
     public static function inflect(string $word, int|float $count): string
     {
-        return $count == 1 ?
-            $word :
-            static::pluralize($word);
+        return $count == 1 ? $word : static::pluralize($word);
     }
 
     /**

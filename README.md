@@ -1,6 +1,6 @@
 # FyreInflector
 
-**FyreInflector** is a free, inflection library for *PHP*.
+**FyreInflector** is a free, open-source inflection library for *PHP*.
 
 
 ## Table Of Contents
