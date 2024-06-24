@@ -8,6 +8,13 @@ use PHPUnit\Framework\TestCase;
 
 final class InflectorTest extends TestCase
 {
+    public function testInflectPlural(): void
+    {
+        $this->assertSame(
+            'hats',
+            Inflector::inflect('hat', 2)
+        );
+    }
 
     public function testInflectSingular(): void
     {
@@ -17,27 +24,11 @@ final class InflectorTest extends TestCase
         );
     }
 
-    public function testInflectPlural(): void
-    {
-        $this->assertSame(
-            'hats',
-            Inflector::inflect('hat', 2)
-        );
-    }
-
     public function testPluralize(): void
     {
         $this->assertSame(
             'countries',
             Inflector::pluralize('country')
-        );
-    }
-
-    public function testPluralizeTitle(): void
-    {
-        $this->assertSame(
-            'Countries',
-            Inflector::pluralize('Country')
         );
     }
 
@@ -54,6 +45,14 @@ final class InflectorTest extends TestCase
         $this->assertSame(
             'People',
             Inflector::pluralize('Person')
+        );
+    }
+
+    public function testPluralizeTitle(): void
+    {
+        $this->assertSame(
+            'Countries',
+            Inflector::pluralize('Country')
         );
     }
 
@@ -81,14 +80,6 @@ final class InflectorTest extends TestCase
         );
     }
 
-    public function testSingularizeTitle(): void
-    {
-        $this->assertSame(
-            'Country',
-            Inflector::singularize('Countries')
-        );
-    }
-
     public function testSingularizeIrregular(): void
     {
         $this->assertSame(
@@ -102,6 +93,14 @@ final class InflectorTest extends TestCase
         $this->assertSame(
             'Person',
             Inflector::singularize('People')
+        );
+    }
+
+    public function testSingularizeTitle(): void
+    {
+        $this->assertSame(
+            'Country',
+            Inflector::singularize('Countries')
         );
     }
 
@@ -120,5 +119,4 @@ final class InflectorTest extends TestCase
             Inflector::singularize('Sheep')
         );
     }
-
 }
