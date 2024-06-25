@@ -19,7 +19,7 @@ abstract class Inflector
 {
     protected static array $cache = [
         'plural' => [],
-        'singular' => []
+        'singular' => [],
     ];
 
     protected static array $irregular = [
@@ -64,7 +64,7 @@ abstract class Inflector
         'foot' => 'feet',
         'foe' => 'foes',
         'sieve' => 'sieves',
-        'cache' => 'caches'
+        'cache' => 'caches',
     ];
 
     protected static array $plural = [
@@ -90,7 +90,7 @@ abstract class Inflector
         '/(ax|cris|test)is$/i' => '$1es',
         '/s$/' => 's',
         '/^$/' => '',
-        '/$/' => 's'
+        '/$/' => 's',
     ];
 
     protected static array $singular = [
@@ -127,7 +127,7 @@ abstract class Inflector
         '/(n)ews$/i' => '$1$2ews',
         '/eaus$/' => 'eau',
         '/^(.*us)$/' => '$1',
-        '/s$/i' => ''
+        '/s$/i' => '',
     ];
 
     protected static array $uncountable = [
@@ -161,11 +161,12 @@ abstract class Inflector
         'sea[- ]bass',
         'series',
         'species',
-        'weather'
+        'weather',
     ];
 
     /**
      * Inflect a word based on a count.
+     *
      * @param string $word The word.
      * @param int|float $count The count.
      * @return string The inflected word.
@@ -177,6 +178,7 @@ abstract class Inflector
 
     /**
      * Get the plural form of a word.
+     *
      * @param string $word The word.
      * @return string The pluralized word.
      */
@@ -215,6 +217,7 @@ abstract class Inflector
 
     /**
      * Get the singular form of a word.
+     *
      * @param string $word The word.
      * @return string The singularized word.
      */
@@ -252,6 +255,7 @@ abstract class Inflector
 
     /**
      * Determine if a word is uncountable.
+     *
      * @param string $word The word.
      * @return bool TRUE if the word is uncountable, otherwise FALSE.
      */
