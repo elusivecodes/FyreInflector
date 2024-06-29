@@ -168,7 +168,7 @@ abstract class Inflector
      * Inflect a word based on a count.
      *
      * @param string $word The word.
-     * @param int|float $count The count.
+     * @param float|int $count The count.
      * @return string The inflected word.
      */
     public static function inflect(string $word, float|int $count): string
