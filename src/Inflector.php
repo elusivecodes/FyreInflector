@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fyre\Utility;
 
 use function array_key_exists;
+use function array_keys;
 use function array_search;
 use function ctype_upper;
 use function implode;
@@ -189,11 +190,8 @@ abstract class Inflector
         }
 
         if (static::isUncountable($word)) {
-            return static::$cache['plural'][$word] = $word;
-        }
-
-        $patterns = array_keys(static::$irregular);
-        if (preg_match('/('.implode('|', $patterns).')$/i', $word, $match)) {
+            // do nothing
+        } else if (preg_match('/('.implode('|', array_keys(static::$irregular)).')$/i', $word, $match)) {
             $key = $match[1];
             $value = static::$irregular[strtolower($key)];
 
@@ -201,15 +199,16 @@ abstract class Inflector
                 $value = ucfirst($value);
             }
 
-            return static::$cache['plural'][$word] = preg_replace('/'.$key.'$/i', $value, $word);
-        }
+            $word = preg_replace('/'.$key.'$/i', $value, $word);
+        } else {
+            foreach (static::$plural as $pattern => $replace) {
+                if (!preg_match($pattern, $word)) {
+                    continue;
+                }
 
-        foreach (static::$plural as $pattern => $replace) {
-            if (!preg_match($pattern, $word)) {
-                continue;
+                $word = preg_replace($pattern, $replace, $word);
+                break;
             }
-
-            return static::$cache['plural'][$word] = preg_replace($pattern, $replace, $word);
         }
 
         return static::$cache['plural'][$word] = $word;
@@ -228,10 +227,8 @@ abstract class Inflector
         }
 
         if (static::isUncountable($word)) {
-            return static::$cache['singular'][$word] = $word;
-        }
-
-        if (preg_match('/('.implode('|', static::$irregular).')$/i', $word, $match)) {
+            // do nothing
+        } else if (preg_match('/('.implode('|', static::$irregular).')$/i', $word, $match)) {
             $value = $match[1];
             $key = array_search(strtolower($value), static::$irregular);
 
@@ -239,22 +236,23 @@ abstract class Inflector
                 $key = ucfirst($key);
             }
 
-            return static::$cache['singular'][$word] = preg_replace('/'.$match[1].'$/i', $key, $word);
-        }
+            $word = preg_replace('/'.$match[1].'$/i', $key, $word);
+        } else {
+            foreach (static::$singular as $pattern => $replace) {
+                if (!preg_match($pattern, $word)) {
+                    continue;
+                }
 
-        foreach (static::$singular as $pattern => $replace) {
-            if (!preg_match($pattern, $word)) {
-                continue;
+                $word = preg_replace($pattern, $replace, $word);
+                break;
             }
-
-            return static::$cache['singular'][$word] = preg_replace($pattern, $replace, $word);
         }
 
         return static::$cache['singular'][$word] = $word;
     }
 
     /**
-     * Determine if a word is uncountable.
+     * Determine whether a word is uncountable.
      *
      * @param string $word The word.
      * @return bool TRUE if the word is uncountable, otherwise FALSE.
