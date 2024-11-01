@@ -52,7 +52,7 @@ Convert a table_name to a singular ClassName.
 - `$tableName` is a string representing the table name.
 
 ```php
-$classified = $inflector->classify($tableName);
+$className = $inflector->classify($tableName);
 ```
 
 **Dasherize**
@@ -73,7 +73,7 @@ Convert a delimited string into Human Readable Form.
 - `$delimiter` is a string representing the delimiter, and will default to "*_*".
 
 ```php
-$humanized = $inflector->humanize($string, $delimiter);
+$title = $inflector->humanize($string, $delimiter);
 ```
 
 **Pluralize**
@@ -114,7 +114,7 @@ Convert a ClassName to a pluralized table_name.
 - `$className` is a string representing the class name.
 
 ```php
-$tableized = $inflector->tableize($className);
+$tableName = $inflector->tableize($className);
 ```
 
 **Underscore**
