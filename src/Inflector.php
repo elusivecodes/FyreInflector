@@ -3,27 +3,26 @@ declare(strict_types=1);
 
 namespace Fyre\Utility;
 
-use function array_key_exists;
+use Closure;
+
 use function array_keys;
 use function array_search;
-use function ctype_upper;
 use function implode;
+use function lcfirst;
 use function preg_match;
 use function preg_replace;
+use function str_replace;
 use function strtolower;
-use function ucfirst;
+use function ucwords;
 
 /**
  * Inflector
  */
-abstract class Inflector
+class Inflector
 {
-    protected static array $cache = [
-        'plural' => [],
-        'singular' => [],
-    ];
+    protected array $cache = [];
 
-    protected static array $irregular = [
+    protected array $irregular = [
         'atlas' => 'atlases',
         'beef' => 'beefs',
         'brief' => 'briefs',
@@ -68,7 +67,7 @@ abstract class Inflector
         'cache' => 'caches',
     ];
 
-    protected static array $plural = [
+    protected array $plural = [
         '/(s)tatus$/i' => '$1tatuses',
         '/(quiz)$/i' => '$1zes',
         '/^(ox)$/i' => '$1$2en',
@@ -94,7 +93,7 @@ abstract class Inflector
         '/$/' => 's',
     ];
 
-    protected static array $singular = [
+    protected array $singular = [
         '/(s)tatuses$/i' => '$1$2tatus',
         '/^(.*)(menu)s$/i' => '$1$2',
         '/(quiz)zes$/i' => '$$1',
@@ -131,7 +130,7 @@ abstract class Inflector
         '/s$/i' => '',
     ];
 
-    protected static array $uncountable = [
+    protected array $uncountable = [
         '.*[nrlm]ese',
         '.*data',
         '.*deer',
@@ -166,99 +165,222 @@ abstract class Inflector
     ];
 
     /**
-     * Inflect a word based on a count.
-     *
-     * @param string $word The word.
-     * @param float|int $count The count.
-     * @return string The inflected word.
+     * Convert a delimited string into CamelCase.
+     * 
+     * @param string $string The input string.
+     * @param string $delimiter The delimiter.
+     * @return string The CamelCase string.
      */
-    public static function inflect(string $word, float|int $count): string
+    public function camelize(string $string, string $delimiter = '_'): string
     {
-        return $count == 1 ? $word : static::pluralize($word);
+        return $this->cache(__FUNCTION__.$delimiter, $string, function(string $string) use ($delimiter): string {
+            return str_replace(' ', '', $this->humanize($string, $delimiter));
+        });
+    }
+
+    /**
+     * Convert a table_name to a singular ClassName.
+     * 
+     * @param string $tableName The table name.
+     * @return string The classified string.
+     */
+    public function classify(string $tableName):string
+    {
+        return $this->cache(__FUNCTION__, $tableName, function(string $tableName): string {
+            return $this->camelize($this->singularize($tableName));
+        });
+    }
+
+    /**
+     * Convert a string into kebab-case.
+     * 
+     * @param string $string The input string.
+     * @return string The kebab-case string.
+     */
+    public function dasherize(string $string): string
+    {
+        return $this->delimit(str_replace('_', '-', $string), '-');
+    }
+
+    /**
+     * Convert a string into Human Readable Form.
+     * 
+     * @param string $string The input string.
+     * @param string $delimiter The delimiter.
+     * @return string The Human Readable Form string.
+     */
+    public function humanize(string $string, string $delimiter = '_'): string
+    {
+        return $this->cache(__FUNCTION__.$delimiter, $string, function(string $string) use ($delimiter): string {
+            return ucwords(str_replace($delimiter, ' ', $string));
+        });
     }
 
     /**
      * Get the plural form of a word.
      *
-     * @param string $word The word.
+     * @param string $string The input string.
      * @return string The pluralized word.
      */
-    public static function pluralize(string $word): string
+    public function pluralize(string $string): string
     {
-        if (array_key_exists($word, static::$cache['plural'])) {
-            return static::$cache['plural'][$word];
-        }
-
-        if (static::isUncountable($word)) {
-            // do nothing
-        } else if (preg_match('/('.implode('|', array_keys(static::$irregular)).')$/i', $word, $match)) {
-            $key = $match[1];
-            $value = static::$irregular[strtolower($key)];
-
-            if (ctype_upper($key[0])) {
-                $value = ucfirst($value);
+        return $this->cache(__FUNCTION__, $string, function(string $string): string {
+            if ($this->isUncountable($string)) {
+                return $string;
             }
 
-            $word = preg_replace('/'.$key.'$/i', $value, $word);
-        } else {
-            foreach (static::$plural as $pattern => $replace) {
-                if (!preg_match($pattern, $word)) {
+            if (preg_match('/('.implode('|', array_keys($this->irregular)).')$/i', $string, $match)) {
+                $key = $match[1];
+                $value = $this->irregular[strtolower($key)];
+
+                return preg_replace('/'.$key.'$/i', $value, $string);
+            }
+
+            foreach ($this->plural as $pattern => $replace) {
+                if (!preg_match($pattern, $string)) {
                     continue;
                 }
 
-                $word = preg_replace($pattern, $replace, $word);
-                break;
+                return preg_replace($pattern, $replace, $string);
             }
+
+            return $string;
+        });
+    }
+
+    /**
+     * Add inflection rules.
+     * 
+     * @param string $type The inflection rule type.
+     * @param array $rules The inflection rules.
+     * @return static The Inflector.
+     */
+    public function rules(string $type, array $rules): static
+    {
+        switch ($type) {
+            case 'irregular':
+            case 'plural':
+            case 'singular':
+                $this->$type = array_replace($this->$type, $rules);
+                break;
+            case 'uncountable':
+                $this->uncountable = array_merge($rules, $this->$type);
+                break;
+            default:
+                break;
         }
 
-        return static::$cache['plural'][$word] = $word;
+        $this->cache = [];
+
+        return $this;
     }
 
     /**
      * Get the singular form of a word.
      *
-     * @param string $word The word.
+     * @param string $string The input string.
      * @return string The singularized word.
      */
-    public static function singularize(string $word): string
+    public function singularize(string $string): string
     {
-        if (array_key_exists($word, static::$cache['singular'])) {
-            return static::$cache['singular'][$word];
-        }
-
-        if (static::isUncountable($word)) {
-            // do nothing
-        } else if (preg_match('/('.implode('|', static::$irregular).')$/i', $word, $match)) {
-            $value = $match[1];
-            $key = array_search(strtolower($value), static::$irregular);
-
-            if (ctype_upper($value[0])) {
-                $key = ucfirst($key);
+        return $this->cache(__FUNCTION__, $string, function(string $string): string {
+            if ($this->isUncountable($string)) {
+                return $string;
             }
 
-            $word = preg_replace('/'.$match[1].'$/i', $key, $word);
-        } else {
-            foreach (static::$singular as $pattern => $replace) {
-                if (!preg_match($pattern, $word)) {
+            if (preg_match('/('.implode('|', $this->irregular).')$/i', $string, $match)) {
+                $value = $match[1];
+                $key = array_search(strtolower($value), $this->irregular);
+
+                return preg_replace('/'.$match[1].'$/i', $key, $string);
+            }
+
+            foreach ($this->singular as $pattern => $replace) {
+                if (!preg_match($pattern, $string)) {
                     continue;
                 }
 
-                $word = preg_replace($pattern, $replace, $word);
-                break;
+                return preg_replace($pattern, $replace, $string);
             }
-        }
 
-        return static::$cache['singular'][$word] = $word;
+            return $string;
+        });
+    }
+
+    /**
+     * Convert a singular ClassName to a pluralized table_name.
+     * 
+     * @param string $className The class name.
+     * @return string The tableized string.
+     */
+    public function tableize(string $className): string
+    {
+        return $this->cache(__FUNCTION__, $className, function(string $string): string {
+            return $this->pluralize($this->underscore($string));
+        });
+    }
+
+    /**
+     * Convert a string into snake_case.
+     * 
+     * @param string $string The input string.
+     * @return string The string.
+     */
+    public function underscore(string $string): string
+    {
+        return $this->delimit(str_replace('-', '_', $string), '_');
+    }
+
+    /**
+     * Convert a string into camelBacked.
+     * 
+     * @param string $string The input string.
+     * @return string The string.
+     */
+    public function variable(string $string): string
+    {
+        return $this->cache(__FUNCTION__, $string, function(string $string): string {
+            return lcfirst($this->camelize($this->underscore($string)));
+        });
+    }
+
+    /**
+     * Retrieve a value from the cache, or generate from a callback if it doesn't exist.
+     * 
+     * @param string $type The cache type.
+     * @param string $value The cache value.
+     * @param Closure $callback The callback.
+     * @return string The generated value.
+     */
+    protected function cache(string $type, string $value, Closure $callback): string
+    {
+        $this->cache[$type] ??= [];
+
+        return $this->cache[$type][$value] ??= $callback($value);
+    }
+
+    /**
+     * Delimit a camelCase string.
+     * 
+     * @param string $string The input string.
+     * @param string $delimiter The delimiter.
+     * @return string The delimited string.
+     */
+    protected function delimit(string $string, string $delimiter = '_'): string
+    {
+        return $this->cache(__FUNCTION__.$delimiter, $string, function(string $string) use ($delimiter): string {
+            return strtolower(preg_replace('/(?<=\\w)([A-Z])/', $delimiter.'\\1', $string));
+        });
     }
 
     /**
      * Determine whether a word is uncountable.
      *
-     * @param string $word The word.
+     * @param string $string The input string.
      * @return bool TRUE if the word is uncountable, otherwise FALSE.
      */
-    protected static function isUncountable(string $word): bool
+    protected function isUncountable(string $string): bool
     {
-        return preg_match('/^('.implode('|', static::$uncountable).')$/i', $word) !== 0;
+        return preg_match('/^('.implode('|', $this->uncountable).')$/i', $string) !== 0;
     }
 }

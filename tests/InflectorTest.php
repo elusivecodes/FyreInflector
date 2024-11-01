@@ -8,19 +8,61 @@ use PHPUnit\Framework\TestCase;
 
 final class InflectorTest extends TestCase
 {
-    public function testInflectPlural(): void
+    protected Inflector $inflector;
+
+    public function testCamelize(): void
     {
         $this->assertSame(
-            'hats',
-            Inflector::inflect('hat', 2)
+            'ThisIsATestString',
+            $this->inflector->camelize('this_is_a_test_string')
         );
     }
 
-    public function testInflectSingular(): void
+    public function testCamelizeDelimiter(): void
     {
         $this->assertSame(
-            'hat',
-            Inflector::inflect('hat', 1)
+            'ThisIsATestString',
+            $this->inflector->camelize('this-is-a-test-string', '-')
+        );
+    }
+
+    public function testClassify(): void
+    {
+        $this->assertSame(
+            'RedApple',
+            $this->inflector->classify('red_apples')
+        );
+    }
+
+    public function testClassifySingular(): void
+    {
+        $this->assertSame(
+            'RedApple',
+            $this->inflector->classify('red_apple')
+        );
+    }
+
+    public function testDasherize(): void
+    {
+        $this->assertSame(
+            'this-is-a-test-string',
+            $this->inflector->dasherize('ThisIsATestString')
+        );
+    }
+
+    public function testHumanize(): void
+    {
+        $this->assertSame(
+            'This Is A Test String',
+            $this->inflector->humanize('this_is_a_test_string')
+        );
+    }
+
+    public function testHumanizeDelimiter(): void
+    {
+        $this->assertSame(
+            'This Is A Test String',
+            $this->inflector->humanize('this-is-a-test-string', '-')
         );
     }
 
@@ -28,7 +70,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'countries',
-            Inflector::pluralize('country')
+            $this->inflector->pluralize('country')
         );
     }
 
@@ -36,15 +78,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'people',
-            Inflector::pluralize('person')
-        );
-    }
-
-    public function testPluralizeIrregularTitle(): void
-    {
-        $this->assertSame(
-            'People',
-            Inflector::pluralize('Person')
+            $this->inflector->pluralize('person')
         );
     }
 
@@ -52,7 +86,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'Countries',
-            Inflector::pluralize('Country')
+            $this->inflector->pluralize('Country')
         );
     }
 
@@ -60,7 +94,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'sheep',
-            Inflector::pluralize('sheep')
+            $this->inflector->pluralize('sheep')
         );
     }
 
@@ -68,7 +102,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'Sheep',
-            Inflector::pluralize('Sheep')
+            $this->inflector->pluralize('Sheep')
         );
     }
 
@@ -76,7 +110,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'country',
-            Inflector::singularize('countries')
+            $this->inflector->singularize('countries')
         );
     }
 
@@ -84,15 +118,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'person',
-            Inflector::singularize('people')
-        );
-    }
-
-    public function testSingularizeIrregularTitle(): void
-    {
-        $this->assertSame(
-            'Person',
-            Inflector::singularize('People')
+            $this->inflector->singularize('people')
         );
     }
 
@@ -100,7 +126,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'Country',
-            Inflector::singularize('Countries')
+            $this->inflector->singularize('Countries')
         );
     }
 
@@ -108,7 +134,7 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'sheep',
-            Inflector::singularize('sheep')
+            $this->inflector->singularize('sheep')
         );
     }
 
@@ -116,7 +142,44 @@ final class InflectorTest extends TestCase
     {
         $this->assertSame(
             'Sheep',
-            Inflector::singularize('Sheep')
+            $this->inflector->singularize('Sheep')
         );
+    }
+
+    public function testTableize(): void
+    {
+        $this->assertSame(
+            'red_apples',
+            $this->inflector->tableize('RedApple')
+        );
+    }
+
+    public function testTableizePlural(): void
+    {
+        $this->assertSame(
+            'red_apples',
+            $this->inflector->tableize('RedApples')
+        );
+    }
+
+    public function testUnderscore(): void
+    {
+        $this->assertSame(
+            'this_is_a_test_string',
+            $this->inflector->underscore('ThisIsATestString')
+        );
+    }
+
+    public function testVariable(): void
+    {
+        $this->assertSame(
+            'thisIsATestString',
+            $this->inflector->variable('this_is_a_test_string')
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->inflector = new Inflector();
     }
 }
