@@ -166,7 +166,7 @@ class Inflector
 
     /**
      * Convert a delimited string into CamelCase.
-     * 
+     *
      * @param string $string The input string.
      * @param string $delimiter The delimiter.
      * @return string The CamelCase string.
@@ -180,11 +180,11 @@ class Inflector
 
     /**
      * Convert a table_name to a singular ClassName.
-     * 
+     *
      * @param string $tableName The table name.
      * @return string The classified string.
      */
-    public function classify(string $tableName):string
+    public function classify(string $tableName): string
     {
         return $this->cache(__FUNCTION__, $tableName, function(string $tableName): string {
             return $this->camelize($this->singularize($tableName));
@@ -193,7 +193,7 @@ class Inflector
 
     /**
      * Convert a string into kebab-case.
-     * 
+     *
      * @param string $string The input string.
      * @return string The kebab-case string.
      */
@@ -204,7 +204,7 @@ class Inflector
 
     /**
      * Convert a string into Human Readable Form.
-     * 
+     *
      * @param string $string The input string.
      * @param string $delimiter The delimiter.
      * @return string The Human Readable Form string.
@@ -250,7 +250,7 @@ class Inflector
 
     /**
      * Add inflection rules.
-     * 
+     *
      * @param string $type The inflection rule type.
      * @param array $rules The inflection rules.
      * @return static The Inflector.
@@ -309,7 +309,7 @@ class Inflector
 
     /**
      * Convert a singular ClassName to a pluralized table_name.
-     * 
+     *
      * @param string $className The class name.
      * @return string The tableized string.
      */
@@ -322,7 +322,7 @@ class Inflector
 
     /**
      * Convert a string into snake_case.
-     * 
+     *
      * @param string $string The input string.
      * @return string The string.
      */
@@ -333,7 +333,7 @@ class Inflector
 
     /**
      * Convert a string into camelBacked.
-     * 
+     *
      * @param string $string The input string.
      * @return string The string.
      */
@@ -346,7 +346,7 @@ class Inflector
 
     /**
      * Retrieve a value from the cache, or generate from a callback if it doesn't exist.
-     * 
+     *
      * @param string $type The cache type.
      * @param string $value The cache value.
      * @param Closure $callback The callback.
@@ -361,7 +361,7 @@ class Inflector
 
     /**
      * Delimit a camelCase string.
-     * 
+     *
      * @param string $string The input string.
      * @param string $delimiter The delimiter.
      * @return string The delimited string.
