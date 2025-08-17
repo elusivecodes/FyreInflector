@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fyre\Utility;
 
 use Closure;
+use Fyre\Utility\Traits\MacroTrait;
 
 use function array_keys;
 use function array_search;
@@ -20,6 +21,8 @@ use function ucwords;
  */
 class Inflector
 {
+    use MacroTrait;
+
     protected array $cache = [];
 
     protected array $irregular = [

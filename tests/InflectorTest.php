@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace Tests;
 
 use Fyre\Utility\Inflector;
+use Fyre\Utility\Traits\MacroTrait;
 use PHPUnit\Framework\TestCase;
+
+use function class_uses;
 
 final class InflectorTest extends TestCase
 {
@@ -63,6 +66,14 @@ final class InflectorTest extends TestCase
         $this->assertSame(
             'This Is A Test String',
             $this->inflector->humanize('this-is-a-test-string', '-')
+        );
+    }
+
+    public function testMacroable(): void
+    {
+        $this->assertContains(
+            MacroTrait::class,
+            class_uses(Inflector::class)
         );
     }
 
