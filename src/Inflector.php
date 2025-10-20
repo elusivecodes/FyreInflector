@@ -214,7 +214,7 @@ class Inflector
      */
     public function humanize(string $string, string $delimiter = '_'): string
     {
-        return $this->cache(__FUNCTION__.$delimiter, $string, function(string $string) use ($delimiter): string {
+        return $this->cache(__FUNCTION__.$delimiter, $string, static function(string $string) use ($delimiter): string {
             return ucwords(str_replace($delimiter, ' ', $string));
         });
     }
@@ -371,7 +371,7 @@ class Inflector
      */
     protected function delimit(string $string, string $delimiter = '_'): string
     {
-        return $this->cache(__FUNCTION__.$delimiter, $string, function(string $string) use ($delimiter): string {
+        return $this->cache(__FUNCTION__.$delimiter, $string, static function(string $string) use ($delimiter): string {
             return strtolower(preg_replace('/(?<=\\w)([A-Z])/', $delimiter.'\\1', $string));
         });
     }
